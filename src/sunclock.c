@@ -91,7 +91,7 @@ float get12HourAngle(int hours, int minutes)
 
 float get60MinAngle(int minutes) 
 {
-  return (30.0f + (minutes/60.0f);
+  return 30.0f + (minutes/60.0f);
 }
 
 void adjustTimezone(float* time) 
@@ -292,7 +292,7 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t)
   hour_hand.layer.layer.frame.origin.x = (144/2) - (hour_hand.layer.layer.frame.size.w/2);
   hour_hand.layer.layer.frame.origin.y = (168/2) - (hour_hand.layer.layer.frame.size.h/2);
 
-  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t->tick_time->tm_hour, t->tick_time->tm_min));
+  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t->tick_time->tm_min));
   minute_hand.layer.layer.frame.origin.x = (144/2) - (minute_hand.layer.layer.frame.size.w/2);
   minute_hand.layer.layer.frame.origin.y = (168/2) - (minute_hand.layer.layer.frame.size.h/2);
 
@@ -367,7 +367,7 @@ PblTm t;
   hour_hand.layer.layer.frame.origin.x = (144/2) - (hour_hand.layer.layer.frame.size.w/2);
   hour_hand.layer.layer.frame.origin.y = (168/2) - (hour_hand.layer.layer.frame.size.h/2);
 
-  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t.tm_hour, t.tm_min));
+  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t.tm_min));
   minute_hand.layer.layer.frame.origin.x = (144/2) - (minute_hand.layer.layer.frame.size.w/2);
   minute_hand.layer.layer.frame.origin.y = (168/2) - (minute_hand.layer.layer.frame.size.h/2);
 
