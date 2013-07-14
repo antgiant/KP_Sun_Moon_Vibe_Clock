@@ -176,7 +176,7 @@ void updateDayAndNightInfo(bool update_everything)
     } 
     else 
     {
-      time_format = "%I:%M";
+      time_format = "%l:%M";
     }
 
     float sunriseTime = calcSunRise(pblTime.tm_year, pblTime.tm_mon+1, pblTime.tm_mday, realLatitude, realLongitude, 91.0f);
