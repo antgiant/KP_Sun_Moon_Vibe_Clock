@@ -50,6 +50,8 @@ float realLongitude = LONGITUDE;
 
 RotBmpPairContainer bitmap_container;
 RotBmpPairContainer watchface_container;
+RotBmpPairContainer hour_hand;
+RotBmpPairContainer minute_hand;
 
 GPathInfo sun_path_info = {
   5,
@@ -85,6 +87,11 @@ float get24HourAngle(int hours, int minutes)
 float get12HourAngle(int hours, int minutes) 
 {
   return (12.0f + hours + (minutes/60.0f)) / 12.0f;
+}
+
+float get60MinAngle(int minutes) 
+{
+  return (30.0f + (minutes/60.0f);
 }
 
 void adjustTimezone(float* time) 
@@ -280,6 +287,14 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t)
   rotbmp_pair_layer_set_angle(&bitmap_container.layer, TRIG_MAX_ANGLE * get24HourAngle(t->tick_time->tm_hour, t->tick_time->tm_min));
   bitmap_container.layer.layer.frame.origin.x = (144/2) - (bitmap_container.layer.layer.frame.size.w/2);
   bitmap_container.layer.layer.frame.origin.y = (168/2) - (bitmap_container.layer.layer.frame.size.h/2);
+  
+  rotbmp_pair_layer_set_angle(&hour_hand.layer, TRIG_MAX_ANGLE * get12HourAngle(t->tick_time->tm_hour, t->tick_time->tm_min));
+  hour_hand.layer.layer.frame.origin.x = (144/2) - (hour_hand.layer.layer.frame.size.w/2);
+  hour_hand.layer.layer.frame.origin.y = (168/2) - (hour_hand.layer.layer.frame.size.h/2);
+
+  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t->tick_time->tm_hour, t->tick_time->tm_min));
+  minute_hand.layer.layer.frame.origin.x = (144/2) - (minute_hand.layer.layer.frame.size.w/2);
+  minute_hand.layer.layer.frame.origin.y = (168/2) - (minute_hand.layer.layer.frame.size.h/2);
 
 // Vibrate Every Hour
   #if HOUR_VIBRATION
@@ -323,6 +338,14 @@ void handle_init(AppContextRef ctx) {
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_DAY_WHITE, RESOURCE_ID_IMAGE_DAY_BLACK, &bitmap_container);
   rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(2,56));
   layer_add_child(&window.layer, &bitmap_container.layer.layer);
+  
+  rotbmp_pair_init_container(RESOURCE_ID_IMAGE_HOUR_WHITE, RESOURCE_ID_IMAGE_HOUR_BLACK, &hour_hand);
+  rotbmp_pair_layer_set_src_ic(&hour_hand.layer, GPoint(9,32));
+  layer_add_child(&window.layer, &hour_hand.layer.layer);
+  
+  rotbmp_pair_init_container(RESOURCE_ID_IMAGE_MINUTE_WHITE, RESOURCE_ID_IMAGE_MINUTE_BLACK, &minute_hand);
+  rotbmp_pair_layer_set_src_ic(&minute_hand.layer, GPoint(9,56));
+  layer_add_child(&window.layer, &minute_hand.layer.layer);
 
   text_layer_init(&moonLayer, GRect(0, 100, 144 /* width */, 168-115 /* height */));
   text_layer_set_text_color(&moonLayer, GColorWhite);
@@ -339,6 +362,14 @@ PblTm t;
   rotbmp_pair_layer_set_angle(&bitmap_container.layer, TRIG_MAX_ANGLE * get24HourAngle(t.tm_hour, t.tm_min));
   bitmap_container.layer.layer.frame.origin.x = (144/2) - (bitmap_container.layer.layer.frame.size.w/2);
   bitmap_container.layer.layer.frame.origin.y = (168/2) - (bitmap_container.layer.layer.frame.size.h/2);
+  
+  rotbmp_pair_layer_set_angle(&hour_hand.layer, TRIG_MAX_ANGLE * get12HourAngle(t.tm_hour, t.tm_min));
+  hour_hand.layer.layer.frame.origin.x = (144/2) - (hour_hand.layer.layer.frame.size.w/2);
+  hour_hand.layer.layer.frame.origin.y = (168/2) - (hour_hand.layer.layer.frame.size.h/2);
+
+  rotbmp_pair_layer_set_angle(&minute_hand.layer, TRIG_MAX_ANGLE * get60MinAngle(t.tm_hour, t.tm_min));
+  minute_hand.layer.layer.frame.origin.x = (144/2) - (minute_hand.layer.layer.frame.size.w/2);
+  minute_hand.layer.layer.frame.origin.y = (168/2) - (minute_hand.layer.layer.frame.size.h/2);
 
   //Day of Week text
   text_layer_init(&dow_layer, GRect(0, 0, 144, 127+26));
@@ -409,6 +440,8 @@ void handle_deinit(AppContextRef ctx) {
 
   rotbmp_pair_deinit_container(&watchface_container);
   rotbmp_pair_deinit_container(&bitmap_container);
+  rotbmp_pair_deinit_container(&hour_hand);
+  rotbmp_pair_deinit_container(&minute_hand);
   fonts_unload_custom_font(font_moon);
 }
 
