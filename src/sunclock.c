@@ -194,8 +194,8 @@ void updateDayAndNightInfo(bool update_everything)
     pblTime.tm_hour = (int)sunriseTime;
     string_format_time(sunrise_text, sizeof(sunrise_text), time_format, &pblTime);
 
-    //Sunrise shows at bottom if before 6 am top otherwise
-    if (pblTime.tm_hour > 6) {
+    //Sunrise shows at top if before 6 am and 6 pm bottom otherwise
+    if (pblTime.tm_hour > 6 && pblTime.tm_hour < 18) {
       text_layer_set_text(&text_top_sunrise_layer, "");
       text_layer_set_text(&text_bottom_sunrise_layer, sunrise_text);
     }
@@ -208,8 +208,8 @@ void updateDayAndNightInfo(bool update_everything)
     pblTime.tm_hour = (int)sunsetTime;
     string_format_time(sunset_text, sizeof(sunset_text), time_format, &pblTime);
 
-    //Sunset shows at bottom if before 6 pm top otherwise
-    if (pblTime.tm_hour < 18) {
+    //Sunset shows at top if before 6 am and 6 pm bottom otherwise
+    if (pblTime.tm_hour > 6 && pblTime.tm_hour < 18) {
       text_layer_set_text(&text_top_sunset_layer, sunset_text);
       text_layer_set_text_alignment(&text_top_sunset_layer, GTextAlignmentRight);
       text_layer_set_text(&text_bottom_sunset_layer, "");
