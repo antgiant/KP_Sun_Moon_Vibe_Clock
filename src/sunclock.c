@@ -32,7 +32,7 @@ const VibePattern hour_pattern = {
 };
 #endif
 	
-TextLayer text_time_layer;
+TextLayer date_layer;
 TextLayer text_sunrise_layer;
 TextLayer text_sunset_layer;
 TextLayer dow_layer;
@@ -258,31 +258,12 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t)
   static char mon_text[] = "xxx";
 	string_format_time(mon_text, sizeof(mon_text), "%b", t->tick_time);	
 
-  char *time_format;
-
-  if (clock_is_24h_style()) 
-  {
-    time_format = "%R";
-  } 
-  else 
-  {
-    time_format = "%I:%M";
-  }
-
-  string_format_time(time_text, sizeof(time_text), time_format, t->tick_time);
-
-  if (!clock_is_24h_style() && (time_text[0] == '0')) 
-  {
-    memmove(time_text, &time_text[1], sizeof(time_text) - 1);
-  }
-
   text_layer_set_text(&dow_layer, dow_text);
   text_layer_set_text(&dom_layer, dom_text);
   text_layer_set_text(&yon_layer, yon_text);
   text_layer_set_text(&mon_layer, mon_text);
   
-  text_layer_set_text(&text_time_layer, time_text);
-  text_layer_set_text_alignment(&text_time_layer, GTextAlignmentCenter);
+  text_layer_set_text(&date_layer, dom_text);
 
   rotbmp_pair_layer_set_angle(&bitmap_container.layer, TRIG_MAX_ANGLE * get24HourAngle(t->tick_time->tm_hour, t->tick_time->tm_min));
   bitmap_container.layer.layer.frame.origin.x = (144/2) - (bitmap_container.layer.layer.frame.size.w/2);
@@ -328,12 +309,12 @@ void handle_init(AppContextRef ctx) {
   watchface_container.layer.layer.frame.origin.x = (144/2) - (watchface_container.layer.layer.frame.size.w/2);
   watchface_container.layer.layer.frame.origin.y = (168/2) - (watchface_container.layer.layer.frame.size.h/2);
 
-  text_layer_init(&text_time_layer, window.layer.frame);
-  text_layer_set_text_color(&text_time_layer, GColorBlack);
-  text_layer_set_background_color(&text_time_layer, GColorClear);
-  layer_set_frame(&text_time_layer.layer, GRect(0, 35, 144, 30));
-  text_layer_set_font(&text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_30)));
-  layer_add_child(&window.layer, &text_time_layer.layer);
+  text_layer_init(&date_layer, window.layer.frame);
+  text_layer_set_text_color(&date_layer, GColorBlack);
+  text_layer_set_background_color(&date_layer, GColorClear);
+  layer_set_frame(&date_layer.layer, GRect(0, 35, 144, 30));
+  text_layer_set_font(&date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_30)));
+  layer_add_child(&window.layer, &date_layer.layer);
 
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_DAY_WHITE, RESOURCE_ID_IMAGE_DAY_BLACK, &bitmap_container);
   rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(2,56));
