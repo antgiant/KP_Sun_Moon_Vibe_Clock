@@ -193,17 +193,33 @@ void updateDayAndNightInfo(bool update_everything)
     pblTime.tm_min = (int)(60*(sunriseTime-((int)(sunriseTime))));
     pblTime.tm_hour = (int)sunriseTime;
     string_format_time(sunrise_text, sizeof(sunrise_text), time_format, &pblTime);
-    text_layer_set_text(&text_bottom_sunrise_layer, sunrise_text);
-    text_layer_set_text(&text_top_sunrise_layer, sunrise_text);
+
+    //Sunrise shows at bottom if before 6 am top otherwise
+    if (pblTime.tm_hour > 6) {
+      text_layer_set_text(&text_top_sunrise_layer, "");
+      text_layer_set_text(&text_bottom_sunrise_layer, sunrise_text);
+    }
+    else {
+      text_layer_set_text(&text_top_sunrise_layer, sunrise_text);
+      text_layer_set_text(&text_bottom_sunrise_layer, "");
+    }
     
     pblTime.tm_min = (int)(60*(sunsetTime-((int)(sunsetTime))));
     pblTime.tm_hour = (int)sunsetTime;
     string_format_time(sunset_text, sizeof(sunset_text), time_format, &pblTime);
-    text_layer_set_text(&text_bottom_sunset_layer, sunset_text);
-    text_layer_set_text_alignment(&text_bottom_sunset_layer, GTextAlignmentRight);
-    text_layer_set_text(&text_top_sunset_layer, sunset_text);
-    text_layer_set_text_alignment(&text_top_sunset_layer, GTextAlignmentRight);
 
+    //Sunset shows at bottom if before 6 pm top otherwise
+    if (pblTime.tm_hour < 18) {
+      text_layer_set_text(&text_top_sunset_layer, "");
+      text_layer_set_text(&text_bottom_sunset_layer, sunset_text);
+      text_layer_set_text_alignment(&text_bottom_sunset_layer, GTextAlignmentRight);
+    }
+    else {
+      text_layer_set_text(&text_top_sunset_layer, sunset_text);
+      text_layer_set_text_alignment(&text_top_sunset_layer, GTextAlignmentRight);
+      text_layer_set_text(&text_bottom_sunset_layer, "");
+    }
+    
     sunriseTime+=12.0f;
     sun_path_info.points[1].x = (int16_t)(my_sin(sunriseTime/24 * M_PI * 2) * 120);
     sun_path_info.points[1].y = -(int16_t)(my_cos(sunriseTime/24 * M_PI * 2) * 120);
