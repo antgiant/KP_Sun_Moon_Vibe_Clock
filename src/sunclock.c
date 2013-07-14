@@ -321,7 +321,7 @@ void handle_init(AppContextRef ctx) {
   layer_add_child(&window.layer, &text_time_layer.layer);
 
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_DAY_WHITE, RESOURCE_ID_IMAGE_DAY_BLACK, &bitmap_container);
-  rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(9,56));
+  rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(2,56));
   layer_add_child(&window.layer, &bitmap_container.layer.layer);
 
   text_layer_init(&moonLayer, GRect(0, 100, 144 /* width */, 168-115 /* height */));
