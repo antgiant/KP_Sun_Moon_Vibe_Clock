@@ -330,15 +330,15 @@ void handle_init(AppContextRef ctx) {
   layer_add_child(&window.layer, &date_layer.layer);
 
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_DAY_WHITE, RESOURCE_ID_IMAGE_DAY_BLACK, &bitmap_container);
-  rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(2,56));
+  rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(7,56));
   layer_add_child(&window.layer, &bitmap_container.layer.layer);
   
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_MINUTE_WHITE, RESOURCE_ID_IMAGE_MINUTE_BLACK, &minute_hand);
-  rotbmp_pair_layer_set_src_ic(&minute_hand.layer, GPoint(9,56));
+  rotbmp_pair_layer_set_src_ic(&minute_hand.layer, GPoint(7,56));
   layer_add_child(&window.layer, &minute_hand.layer.layer);
   
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_HOUR_WHITE, RESOURCE_ID_IMAGE_HOUR_BLACK, &hour_hand);
-  rotbmp_pair_layer_set_src_ic(&hour_hand.layer, GPoint(9,32));
+  rotbmp_pair_layer_set_src_ic(&hour_hand.layer, GPoint(7,32));
   layer_add_child(&window.layer, &hour_hand.layer.layer);
 
   text_layer_init(&moonLayer, GRect(0, 100, 144 /* width */, 168-115 /* height */));
