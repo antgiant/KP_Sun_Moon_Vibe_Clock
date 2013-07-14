@@ -82,6 +82,11 @@ float get24HourAngle(int hours, int minutes)
   return (12.0f + hours + (minutes/60.0f)) / 24.0f;
 }
 
+float get12HourAngle(int hours, int minutes) 
+{
+  return (12.0f + hours + (minutes/60.0f)) / 12.0f;
+}
+
 void adjustTimezone(float* time) 
 {
   *time += realTimezone;
@@ -315,7 +320,7 @@ void handle_init(AppContextRef ctx) {
   text_layer_set_font(&text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_30)));
   layer_add_child(&window.layer, &text_time_layer.layer);
 
-  rotbmp_pair_init_container(RESOURCE_ID_IMAGE_HOUR_WHITE, RESOURCE_ID_IMAGE_HOUR_BLACK, &bitmap_container);
+  rotbmp_pair_init_container(RESOURCE_ID_IMAGE_DAY_WHITE, RESOURCE_ID_IMAGE_DAY_BLACK, &bitmap_container);
   rotbmp_pair_layer_set_src_ic(&bitmap_container.layer, GPoint(9,56));
   layer_add_child(&window.layer, &bitmap_container.layer.layer);
 

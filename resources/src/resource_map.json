@@ -29,9 +29,19 @@
             "file": "images/menu_icon_sunclock.png"
         },
         {
+            "defName": "IMAGE_DAY",
+            "type": "png-trans",
+            "file": "images/day.png"
+        },
+        {
             "defName": "IMAGE_HOUR",
             "type": "png-trans",
             "file": "images/hour.png"
+        },
+        {
+            "defName": "IMAGE_MINUTE",
+            "type": "png-trans",
+            "file": "images/minute.png"
         }
     ],
     "friendlyVersion": "VERSION",
