@@ -210,14 +210,14 @@ void updateDayAndNightInfo(bool update_everything)
 
     //Sunset shows at bottom if before 6 pm top otherwise
     if (pblTime.tm_hour < 18) {
-      text_layer_set_text(&text_top_sunset_layer, "");
-      text_layer_set_text(&text_bottom_sunset_layer, sunset_text);
-      text_layer_set_text_alignment(&text_bottom_sunset_layer, GTextAlignmentRight);
-    }
-    else {
       text_layer_set_text(&text_top_sunset_layer, sunset_text);
       text_layer_set_text_alignment(&text_top_sunset_layer, GTextAlignmentRight);
       text_layer_set_text(&text_bottom_sunset_layer, "");
+    }
+    else {
+      text_layer_set_text(&text_top_sunset_layer, "");
+      text_layer_set_text(&text_bottom_sunset_layer, sunset_text);
+      text_layer_set_text_alignment(&text_bottom_sunset_layer, GTextAlignmentRight);
     }
     
     sunriseTime+=12.0f;
