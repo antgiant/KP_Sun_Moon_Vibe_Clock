@@ -33,12 +33,10 @@ const VibePattern hour_pattern = {
 #endif
 	
 TextLayer date_layer;
-TextLayer text_sunrise_layer;
-TextLayer text_sunset_layer;
-TextLayer dow_layer;
-TextLayer dom_layer;
-TextLayer yon_layer;
-TextLayer mon_layer;
+TextLayer text_bottom_sunrise_layer;
+TextLayer text_bottom_sunset_layer;
+TextLayer text_top_sunrise_layer;
+TextLayer text_top_sunset_layer;
 TextLayer moonLayer; // moon phase
 Layer graphics_sun_layer;
 //Make fonts global so we can deinit later
@@ -195,13 +193,16 @@ void updateDayAndNightInfo(bool update_everything)
     pblTime.tm_min = (int)(60*(sunriseTime-((int)(sunriseTime))));
     pblTime.tm_hour = (int)sunriseTime;
     string_format_time(sunrise_text, sizeof(sunrise_text), time_format, &pblTime);
-    text_layer_set_text(&text_sunrise_layer, sunrise_text);
+    text_layer_set_text(&text_bottom_sunrise_layer, sunrise_text);
+    text_layer_set_text(&text_top_sunrise_layer, sunrise_text);
     
     pblTime.tm_min = (int)(60*(sunsetTime-((int)(sunsetTime))));
     pblTime.tm_hour = (int)sunsetTime;
     string_format_time(sunset_text, sizeof(sunset_text), time_format, &pblTime);
-    text_layer_set_text(&text_sunset_layer, sunset_text);
-    text_layer_set_text_alignment(&text_sunset_layer, GTextAlignmentRight);
+    text_layer_set_text(&text_bottom_sunset_layer, sunset_text);
+    text_layer_set_text_alignment(&text_bottom_sunset_layer, GTextAlignmentRight);
+    text_layer_set_text(&text_top_sunset_layer, sunset_text);
+    text_layer_set_text_alignment(&text_top_sunset_layer, GTextAlignmentRight);
 
     sunriseTime+=12.0f;
     sun_path_info.points[1].x = (int16_t)(my_sin(sunriseTime/24 * M_PI * 2) * 120);
@@ -257,11 +258,6 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t)
 	string_format_time(yon_text, sizeof(yon_text), "%y", t->tick_time);	
   static char mon_text[] = "xxx";
 	string_format_time(mon_text, sizeof(mon_text), "%b", t->tick_time);	
-
-  text_layer_set_text(&dow_layer, dow_text);
-  text_layer_set_text(&dom_layer, dom_text);
-  text_layer_set_text(&yon_layer, yon_text);
-  text_layer_set_text(&mon_layer, mon_text);
   
   text_layer_set_text(&date_layer, dom_text);
   text_layer_set_text_alignment(&date_layer, GTextAlignmentCenter);
@@ -353,57 +349,37 @@ PblTm t;
   minute_hand.layer.layer.frame.origin.x = (144/2) - (minute_hand.layer.layer.frame.size.w/2);
   minute_hand.layer.layer.frame.origin.y = (168/2) - (minute_hand.layer.layer.frame.size.h/2);
 
-  //Day of Week text
-  text_layer_init(&dow_layer, GRect(0, 0, 144, 127+26));
-  text_layer_set_text_color(&dow_layer, GColorWhite);
-  text_layer_set_background_color(&dow_layer, GColorClear);
-  text_layer_set_font(&dow_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
-  text_layer_set_text_alignment(&dow_layer, GTextAlignmentLeft);
-  text_layer_set_text(&dow_layer, "xxx");
-  layer_add_child(&window.layer, &dow_layer.layer);
+  //Sunrise Text (Top Left)
+  text_layer_init(&text_top_sunrise_layer, window.layer.frame);
+  text_layer_set_text_color(&text_top_sunrise_layer, GColorWhite);
+  text_layer_set_background_color(&text_top_sunrise_layer, GColorClear);
+  layer_set_frame(&text_top_sunrise_layer.layer, GRect(0, 0, 144, 127+26));
+  text_layer_set_font(&text_top_sunrise_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  layer_add_child(&window.layer, &text_top_sunrise_layer.layer);
 
-  //Day of the Month text
-  text_layer_init(&dom_layer, GRect(0, 10, 144, 137+26));
-  text_layer_set_text_color(&dom_layer, GColorWhite);
-  text_layer_set_background_color(&dom_layer, GColorClear);
-  text_layer_set_font(&dom_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
-  text_layer_set_text_alignment(&dom_layer, GTextAlignmentLeft);
-  text_layer_set_text(&dom_layer, "00");
-  layer_add_child(&window.layer, &dom_layer.layer);
-	
-  //Month Text
-  text_layer_init(&mon_layer, GRect(0, 0, 144, 127+26));
-  text_layer_set_text_color(&mon_layer, GColorWhite);
-  text_layer_set_background_color(&mon_layer, GColorClear);
-  text_layer_set_font(&mon_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
-  text_layer_set_text_alignment(&mon_layer, GTextAlignmentRight);
-  text_layer_set_text(&mon_layer, "xxx");
-  layer_add_child(&window.layer, &mon_layer.layer);
+  //Sunrise Text (Bottom Left)
+  text_layer_init(&text_bottom_sunrise_layer, window.layer.frame);
+  text_layer_set_text_color(&text_bottom_sunrise_layer, GColorWhite);
+  text_layer_set_background_color(&text_bottom_sunrise_layer, GColorClear);
+  layer_set_frame(&text_bottom_sunrise_layer.layer, GRect(0, 145, 144, 30));
+  text_layer_set_font(&text_bottom_sunrise_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  layer_add_child(&window.layer, &text_bottom_sunrise_layer.layer);
 
-  //Year Number text
-  text_layer_init(&yon_layer, GRect(0, 10, 144, 137+26));
-  text_layer_set_text_color(&yon_layer, GColorWhite);
-  text_layer_set_background_color(&yon_layer, GColorClear);
-  text_layer_set_font(&yon_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
-  text_layer_set_text_alignment(&yon_layer, GTextAlignmentRight);
-  text_layer_set_text(&yon_layer, "00");
-  layer_add_child(&window.layer, &yon_layer.layer); 	
+  //Sunset Text (Top Right)
+  text_layer_init(&text_top_sunset_layer, window.layer.frame);
+  text_layer_set_text_color(&text_top_sunset_layer, GColorWhite);
+  text_layer_set_background_color(&text_top_sunset_layer, GColorClear);
+  layer_set_frame(&text_top_sunset_layer.layer, GRect(0, 0, 144, 127+26));
+  text_layer_set_font(&text_top_sunset_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  layer_add_child(&window.layer, &text_top_sunset_layer.layer);
 
-  //Sunrise Text 
-  text_layer_init(&text_sunrise_layer, window.layer.frame);
-  text_layer_set_text_color(&text_sunrise_layer, GColorWhite);
-  text_layer_set_background_color(&text_sunrise_layer, GColorClear);
-  layer_set_frame(&text_sunrise_layer.layer, GRect(0, 145, 144, 30));
-  text_layer_set_font(&text_sunrise_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  layer_add_child(&window.layer, &text_sunrise_layer.layer);
-
- //Sunset Text
-  text_layer_init(&text_sunset_layer, window.layer.frame);
-  text_layer_set_text_color(&text_sunset_layer, GColorWhite);
-  text_layer_set_background_color(&text_sunset_layer, GColorClear);
-  layer_set_frame(&text_sunset_layer.layer, GRect(0, 145, 144, 30));
-  text_layer_set_font(&text_sunset_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  layer_add_child(&window.layer, &text_sunset_layer.layer); 
+ //Sunset Text (Bottom Right)
+  text_layer_init(&text_bottom_sunset_layer, window.layer.frame);
+  text_layer_set_text_color(&text_bottom_sunset_layer, GColorWhite);
+  text_layer_set_background_color(&text_bottom_sunset_layer, GColorClear);
+  layer_set_frame(&text_bottom_sunset_layer.layer, GRect(0, 145, 144, 30));
+  text_layer_set_font(&text_bottom_sunset_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  layer_add_child(&window.layer, &text_bottom_sunset_layer.layer); 
 
   http_set_app_id(55122370);
 
