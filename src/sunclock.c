@@ -338,7 +338,7 @@ void handle_init(AppContextRef ctx) {
   layer_add_child(&window.layer, &minute_hand.layer.layer);
   
   rotbmp_pair_init_container(RESOURCE_ID_IMAGE_HOUR_WHITE, RESOURCE_ID_IMAGE_HOUR_BLACK, &hour_hand);
-  rotbmp_pair_layer_set_src_ic(&hour_hand.layer, GPoint(6,48));
+  rotbmp_pair_layer_set_src_ic(&hour_hand.layer, GPoint(6,42));
   layer_add_child(&window.layer, &hour_hand.layer.layer);
 
   text_layer_init(&moonLayer, GRect(0, 100, 144 /* width */, 168-115 /* height */));
